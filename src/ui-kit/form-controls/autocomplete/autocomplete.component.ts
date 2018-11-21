@@ -17,7 +17,7 @@ import {
   ControlValueAccessor,
   FormControl
 } from '@angular/forms';
-import { Observable, Subject,of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { AutocompleteConfig } from '../../types';
 import { AutocompleteService } from './autocomplete.service';
 import { SamFormService } from '../../form-service';
@@ -128,6 +128,12 @@ export class SamAutocompleteComponent
    * Set timer that keyboard input should poll to trigger service calls
    */
   @Input() public debounceTime: number = 250;
+
+  /**
+   * Sets the primary key to be used with key paired
+   */
+  @Input()
+  public primaryKey: string;
   /*
    How do define custom http callbacks:
    <sam-autocomplete
@@ -190,9 +196,11 @@ export class SamAutocompleteComponent
   public lastReturnedResults: Array<string>;
 
   public keyValuePairs: any;
-  public filteredKeyValuePairs: any;
+  public filteredKeyValuePairs: any[];
   public inputTimer;
   public cache: AutocompleteCache = new AutocompleteCache();
+
+
 
   public resultsAvailable: string = ' results available. Use up and down arrows\
    to scroll through results. Hit enter to select.';
@@ -231,9 +239,27 @@ export class SamAutocompleteComponent
     if (this.isKeyValuePair(data)) {
       if (this.filteredKeyValuePairs) {
         if (!areEqual(data, this.lastReturnedResults)) {
-          data.forEach((item) => {
-            this.filteredKeyValuePairs.push(item);
-          });
+          if (this.primaryKey) {
+
+
+
+
+            data.forEach((item) => {
+
+              if (!this.filteredKeyValuePairs.find((o, i) => {
+                if (o[this.primaryKey] === item[this.primaryKey]) {
+                  return true;
+                }
+              })) {
+
+                this.filteredKeyValuePairs.push(item);
+              }
+            });
+          } else {
+            data.forEach((item) => {
+              this.filteredKeyValuePairs.push(item);
+            });
+          }
         }
       } else {
         this.filteredKeyValuePairs = data;
@@ -316,16 +342,12 @@ export class SamAutocompleteComponent
   }
 
   isKeyValuePair(arr: Array<any>): boolean {
-    if (arr && arr[0] && typeof arr[0] !== 'string') {
-      return true;
-    } else {
-      return false;
-    }
+    return arr && arr[0] && typeof arr[0] !== 'string';
   }
 
   onKeyup(event: any) {
 
-   
+
     if (KeyHelper.is('tab', event)) {
       return
     }
