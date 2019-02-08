@@ -210,7 +210,8 @@ export class SamModalComponent implements OnInit {
     this.open.emit(this.args);
     if (document && document.body) {
       this.createBackdrop();
-      this.disableScroll();
+      this._scrollHelpers.disableScroll();
+      // this.disableScroll();
       document.body.appendChild(this.backdropElement);
     }
     this._focusModalElement = true;
@@ -219,7 +220,8 @@ export class SamModalComponent implements OnInit {
   }
 
   closeModal(emit: boolean = true) {
-    this.enableScroll();
+    this._scrollHelpers.enableScroll();
+   // this.enableScroll();
     this.show = false;
     if(emit){
       this.onClose.emit(this.args);
