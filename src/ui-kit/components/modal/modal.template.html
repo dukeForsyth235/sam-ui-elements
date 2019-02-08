@@ -1,5 +1,3 @@
-<h3>Testing changes</h3>
-
 <div aria-live="assertive" #modalRoot *ngIf="show" [attr.id]="id" tabindex="-1" role="dialog" class="modal-dialog" (keydown.esc)="closeOnEscape ? closeModal() : 0" (click)="closeOnOutsideClick ? closeModal() : 0">
 	<div #modalContent class="modal-content" (click)="preventClosing($event)">
 		<div *ngIf="this.type !== 'primary'" class="usa-alert {{this.types[type].class}}">
@@ -17,7 +15,7 @@
 			</div>
 		</div>
 		<div class="modal-body">
-		  <p *ngIf="description">{{description}}</p>
+		  <p *ngIf="description">Modal Testing with new version-{{description}}</p>
 			<ng-content></ng-content>
 			<div *ngIf="cancelButtonLabel || submitButtonLabel" class="usa-modal-content-btn-area">
 				<sam-button buttonType="tertiary" class="usa-button-outline usa-modal-content-cancel-btn" *ngIf="cancelButtonLabel" (onClick)="closeModal()" [buttonText]="cancelButtonLabel" [attr.id]="modalElIds?.cancelId"></sam-button>
