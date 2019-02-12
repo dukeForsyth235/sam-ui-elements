@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
 import { SamHiercarchicalServiceInterface } from "../hierarchical-interface";
 import { SamHierarchicalTreeConfiguration } from "../models/SamHierarchicalTreeConfiguration";
-import { Sort } from "../../../components/data-table/sort.directive";
 
 @Component({
   selector: "sam-hierarchical-tree",
@@ -16,11 +15,6 @@ export class SamHierarchicalTreeComponent implements OnInit {
    * Hierarchy level changes event 
    */
   public selecteHierarchyLevel = new BehaviorSubject<object>(null);
-
-  /**
-   * Hierarchy level Sort Level
-   */
-  public sortLevel = new BehaviorSubject<Sort>(null);
 
   /**
    * Event when something is checked/selected in the grid
@@ -56,9 +50,6 @@ export class SamHierarchicalTreeComponent implements OnInit {
    * Selected Values Primiary Id
    */
   public selectedValue: string;
-
-
-  private sort: Sort;
 
   /**
    * is single mode if a single or multiple item selection
@@ -105,13 +96,6 @@ export class SamHierarchicalTreeComponent implements OnInit {
     this.filterTextSubject.subscribe(
       text => {
         this.filterText = text;
-        this.getResults();
-      }
-    );
-
-    this.sortLevel.subscribe(
-      sort => {
-        this.sort = sort;
         this.getResults();
       }
     );
@@ -197,6 +181,6 @@ export class SamHierarchicalTreeComponent implements OnInit {
    * the primary id of the selected   * and the filter
    */
   private getResults() {
-    this.gridResults = this.service.getHiercarchicalById(this.selectedValue, this.filterText, this.sort);
+    this.gridResults = this.service.getHiercarchicalById(this.selectedValue, this.filterText);
   }
 }

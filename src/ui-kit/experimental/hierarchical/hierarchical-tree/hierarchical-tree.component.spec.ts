@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SamHierarchicalTreeComponent } from './hierarchical-tree.component';
 import { SamHierarchicalTreeGridComponent } from '../hierarchical-tree-grid/hierarchical-tree-grid.component';
@@ -15,9 +15,7 @@ import { ExpectedConditions } from 'protractor';
 import { Observable } from 'rxjs';
 import { SamHiercarchicalServiceInterface, SearchByTextResult } from '../hierarchical-interface';
 import 'rxjs/add/observable/of';
-import { Sort, SortDirection } from "../../../components/data-table/sort.directive";
 
-const sortOrder: SortDirection[] = ['asc', 'desc'];
 const config: SamHierarchicalTreeConfiguration = {
   gridColumnsDisplayed: [],
   primaryKeyField: 'id',
@@ -28,7 +26,7 @@ const config: SamHierarchicalTreeConfiguration = {
 };
 
 
-fdescribe('SamHierarchicalTreeComponent', () => {
+describe('SamHierarchicalTreeComponent', () => {
   let component: SamHierarchicalTreeComponent;
   let fixture: ComponentFixture<SamHierarchicalTreeComponent>;
 
@@ -68,34 +66,6 @@ fdescribe('SamHierarchicalTreeComponent', () => {
     expect(component.breadcrumbStackSelectable.length).toBe(2);
     expect(component.selectedValue).toBe(SampleHierarchicalData[0].id);
   });
-
-
-  it('Sort Empty ', fakeAsync(() => {
-
-    component.sortLevel.next(null);
-    let list = [];
-    component.gridResults.subscribe(
-      value => list = value
-    );
-    fixture.detectChanges();
-    tick();
-    expect(list.length).toBe(1);
-  }));
-
-  it('Sort not empty ', fakeAsync(() => {
-    let sortItem = {
-      active: 'id',
-      direction: sortOrder[0]
-    }
-    component.sortLevel.next(sortItem);
-    let list = [];
-    component.gridResults.subscribe(
-      value => list = value
-    );
-    fixture.detectChanges();
-    tick();
-    expect(list.length).toBe(1);
-  }));
 
 
 });
@@ -138,7 +108,7 @@ export class HierarchicalDataService implements SamHiercarchicalServiceInterface
     return null;
   }
 
-  getHiercarchicalById(id: string, searchValue: string, sort: Sort): Observable<object[]> {
+  getHiercarchicalById(id?: string, searchValue?: string): Observable<object[]> {
     let data = Observable.of(this.loadedData);
     if (searchValue) {
       return data.map(items => items.filter(itm => itm.parentId === id && (itm.name.indexOf(searchValue) !== -1 || itm.subtext.indexOf(searchValue) !== -1)));

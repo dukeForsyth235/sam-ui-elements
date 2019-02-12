@@ -39,9 +39,6 @@ export class SamHierarchicalTreeGridComponent implements OnInit {
   */
   @Output() selectResults = new EventEmitter<object[]>();
 
-
-  @Output() public sorted = new EventEmitter<object>();
-
   /**
    * Columns to be displayed
    */
@@ -80,7 +77,7 @@ export class SamHierarchicalTreeGridComponent implements OnInit {
   /**
    * Sort Directive
    */
-  @ViewChild(SamSortDirective) sortDirective: SamSortDirective;
+  @ViewChild(SamSortDirective) sort: SamSortDirective;
 
 
   constructor(private cdr: ChangeDetectorRef) { }
@@ -101,13 +98,9 @@ export class SamHierarchicalTreeGridComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.hierarchicalDataSource = new HierarchicalDataSource(this.dataChange);
-
-
-    this.sortDirective.samSortChange.subscribe(
-      value => {
-        this.sorted.emit(value);
-      }
+    this.hierarchicalDataSource = new HierarchicalDataSource(
+      this.dataChange,
+      this.sort
     );
     this.cdr.detectChanges();
   }

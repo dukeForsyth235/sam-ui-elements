@@ -307,17 +307,40 @@ describe('The Sam hierarchical grid component', () => {
             expect(component.columnHeaderText.length).toBe(0);
         });
         it('test', () => {
-                        component.dataChange.next(gridData);
+            const sort: SamSortDirective = new SamSortDirective();
+            component.dataChange.next(gridData);
 
             const dataSource = new HierarchicalDataSource(
-                component.dataChange
-                
+                component.dataChange,
+                sort
             );
             dataSource.connect();
             expect(dataSource.renderedData.length).toBe(0);
 
         });
-     
+        it('Data Source get Sorted Data', () => {
+            const sort: SamSortDirective = new SamSortDirective();
+            component.dataChange.next(gridData);
+
+            const dataSource = new HierarchicalDataSource(
+                component.dataChange,
+                sort
+            );
+            const result = dataSource.getSortedData(gridData).length;
+            expect(result).toBe(gridData.length);
+        });
+        it('Data Source sorting Data Accessor', () => {
+            const row = { 'id': '1', 'parentId': null, 'name': 'Level 1', 'subtext': 'id 1', 'type': 'Level 1' };
+            const sort: SamSortDirective = new SamSortDirective();
+            component.dataChange.next(gridData);
+
+            const dataSource = new HierarchicalDataSource(
+                component.dataChange,
+                sort
+            );
+            const result = dataSource.sortingDataAccessor(row, 'id');
+            expect(result).toBe(row['id']);
+        });
 
     });
 });
